@@ -1,0 +1,119 @@
+<html>
+<head>
+<title>统计</title>
+<script type="text/javascript" src="Loader.js"></script>
+</head>
+<body>
+<div style="width:100%;height:50%;overflow-y:auto;word-break:break-all">
+     <table id="myTable">
+     </table>
+</div>
+<div style="width:100%;height:40%;overflow-y:auto;word-break:break-all">
+     <table id="myTable2">
+     </table>
+</div>
+<style>
+td { 
+    text-align:center; 
+}
+</style>
+<script type="text/javascript">
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+}
+var users={'mengfanrong':'孟繁荣家里','blfshiye':'芳儿公司1','hrhguanli':'芳儿公司2',
+'phlsheji':'白龙飞','yxwkaifa':'待定','zfyouxi':'二姐','mfrbuaa':'孟繁荣公司',
+'gcczhongduan':'待定','lcchuguo':'大姐'};
+function createTable(record)
+{
+    var tongji=new Array();
+    var myTable=document.getElementById('myTable');
+	bg="#cccccc";
+	var inner='<tr onmouseover="show(this)" onmouseout="noshow(this)" bgcolor="'+bg+'"><td>用户名</td>' +
+	'<td>时间</td><td>目标url</td><td>原始url 总数('+(record.length-1)+')</td></tr>';
+	var i=0;
+	for(i=0;i<record.length-1;i++)
+	{
+		if(i%2==0)
+			bg="#cccccc";
+		else
+			bg="#ffffff";
+		inner+='<tr onmouseover="show(this)" onmouseout="noshow(this)" bgcolor="'+bg+'">';
+		inner+='<td width="100px" height="45px">'+record[i]['user']+'</td>';
+		inner+='<td width="160px" >'+record[i]['time']+'</td>';
+		inner+='<td width="400px" >'+record[i]['dst_url']+'</td>';
+		inner+='<td>'+record[i]['src_url']+'</td>';
+		inner+='</tr>';
+		
+		if (tongji[record[i]['user']] == null)
+		{
+		    tongji[record[i]['user']]={};
+			tongji[record[i]['user']].endTime=record[i]['time'];
+			tongji[record[i]['user']].startTime=record[i]['time'];
+			tongji[record[i]['user']].count=1;
+			tongji[record[i]['user']].user=record[i]['user'];
+		}
+		else
+		{
+		    tongji[record[i]['user']].count++;
+			tongji[record[i]['user']].startTime=record[i]['time'];
+		}
+	}
+	myTable.innerHTML=inner;
+	
+	inner='<tr onmouseover="show(this)" onmouseout="noshow(this)" bgcolor="'+bg+'"><td>用户名</td>' +
+	'<td>开始时间</td><td>结束时间</td><td>总数('+(record.length-1)+'/'+record[record.length-1]['published_count']+
+	'/'+record[record.length-1]['total_blogs']+')</td><td>中文</td></tr>';
+	var index=0;
+	for(var item in users)
+	{
+	    if(tongji[item]==null)
+		{
+		    tongji[item]={};
+		    tongji[item].startTime=null;
+			tongji[item].endTime=null;
+			tongji[item].count=0;
+			tongji[item].user=item;
+		}
+		tongji[item].chnName=users[item];
+		if(index%2==0)
+			bg="#cccccc";
+		else
+			bg="#ffffff";
+		index++;
+	    console.log(tongji[item].user + ' ' + tongji[item].startTime + ' ' + tongji[item].endTime + ' ' + tongji[item].count);
+		inner+='<tr onmouseover="show(this)" onmouseout="noshow(this)" bgcolor="'+bg+'">';
+		inner+='<td width="200px">'+tongji[item].user+'</td>';
+		inner+='<td width="200px">'+tongji[item].startTime+'</td>';
+		inner+='<td width="200px">'+tongji[item].endTime+'</td>';
+		inner+='<td>'+tongji[item].count+'</td>';
+		inner+='<td>'+tongji[item].chnName+'</td>';
+		inner+='</tr>';
+	}
+	myTable2.innerHTML=inner;
+}   
+    
+var ys=null;
+function show(obj)
+{
+    ys=obj.bgColor;
+    obj.bgColor="green";
+}
+function noshow(obj)
+{
+    obj.bgColor=ys;
+}
+var nDaysAgo=getQueryString('nDaysAgo');
+if(nDaysAgo==null)nDaysAgo=0;
+var url="http://autoblog.jd-app.com/blog/query.php?type=getPublishedBlog&nDaysAgo="+nDaysAgo;
+window.Loader.send("xxx", url, function(result)
+{
+	console.log(result.length);
+	console.log("finished!");
+	createTable(result)
+});
+</script>
+</body>
+</html>
