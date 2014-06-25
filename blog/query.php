@@ -89,13 +89,9 @@ function getPublishedBlog($nDaysAgo,$cb)
 	    $result[$index]=array("user"=>$row[0],"time"=>$row[1],"dst_url"=>$row[2],"src_url"=>$row[3]);
 		$index++;
 	}
-	$sql="select count(*) from csdnblog";
-	$query=mysql_query($sql);
-	$row=mysql_fetch_array($query);
+	$row=mysql_fetch_array(mysql_query("select count(*) from csdnblog"));
 	$row2=mysql_fetch_array(mysql_query("select count(*) from csdnblog where isPublish=1"));
-	$result2=array();
-	$index=1;
-	$result2[0]=array("total_blogs"=>$row[0],"published_count"=>$row2[0]);
+	$result[$index]=array("total_blogs"=>$row[0],"published_count"=>$row2[0]);
 	echo $cb."(".json_encode($result).")";
 }
 function getOneBlog($username)
