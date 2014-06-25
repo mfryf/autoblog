@@ -1,0 +1,9 @@
+自动发博客软件zfyouxi账户更新
+
+程序更新方法：
+1）请下载附件zfyouxi.zip文件
+2）关闭正在运行的博客发布软件
+3）复制zfyouxi.zip到软件运行目录zfyouxi
+4）右键点击zfyouxi.zip,选择解压到当前目录，覆盖所有旧文件
+5）双击install.bat 进行安装（如果杀毒软件弹出拦截窗口，选择”允许本次操作“）
+6）双击csdnblog_publish.py 启动程序
