@@ -7,3 +7,8 @@
 ./generate_one_program.sh phlsheji
 ./generate_one_program.sh yxwkaifa
 ./generate_one_program.sh zfyouxi
+for file in `find ./ -name "*.bat"`
+do
+    sed -e 's/$/\r/' $file > $file.tmp
+    mv $file.tmp $file
+done
