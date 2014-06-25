@@ -11,11 +11,26 @@ if [ "$username" = "mengfanrong" ];then
 	exit 1
 fi
 cp mengfanrong/csdnblog_publish.py mengfanrong/csdnblog_publish.pyw
-rm mengfanrong/html.zip mengfanrong/similiar.txt mengfanrong/csdnblog_publish.py.lnk
+
+#rm temp files
+if [ -f mengfanrong/html.zip ];then
+	rm mengfanrong/html.zip
+fi
+if [ -f mengfanrong/similiar.txt ];then
+	rm mengfanrong/similiar.txt
+fi
+if [ -f mengfanrong/csdnblog_publish.py.lnk ];then
+	rm mengfanrong/csdnblog_publish.py.lnk
+fi
+
+
 cat mengfanrong/csdnblog_publish.py|grep "version=\""|awk -F '"' '{print $2}'>version
 mkdir -p $username
 cp mengfanrong/*  $username/ -r
-cat $username/csdnblog_publish.pyw|sed "s;mengfanrong;$username;g">$username/csdnblog_publish.pyw.tmp
-mv $username/csdnblog_publish.pyw.tmp $username/csdnblog_publish.pyw
-cat $username/csdnblog_publish.py|sed "s;mengfanrong;$username;g">$username/csdnblog_publish.py.tmp
-mv $username/csdnblog_publish.py.tmp $username/csdnblog_publish.py
+
+for file in `find $username -type f`
+do
+    cat $file|sed "s;mengfanrong;$username;g" >$file.tmp
+	mv $file.tmp $file
+done
+echo finish $username
