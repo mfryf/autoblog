@@ -11,8 +11,8 @@ del CreateShortcut.vbs
 
 set path1="C:\Users\All Users\Microsoft\Windows\Start Menu\Programs\Startup\"
 set path2="C:\Users\%USERNAME%\Microsoft\Windows\Start Menu\Programs\Startup\"
-set path3="C:\Documents and Settings\All Users\「开始」菜单\程序\启动\"
-set path4="C:\Documents and Settings\%USERNAME%\「开始」菜单\程序\启动\"
+set path3="C:\Documents and Settings\All Users\銆屽紑濮嬨�嶈彍鍗昞绋嬪簭\鍚姩\"
+set path4="C:\Documents and Settings\%USERNAME%\銆屽紑濮嬨�嶈彍鍗昞绋嬪簭\鍚姩\"
 if exist %path1% (
 	copy %linkFile% %path1%
 	echo successfully1
