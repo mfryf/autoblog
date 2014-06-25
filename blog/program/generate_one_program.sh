@@ -23,6 +23,9 @@ if [ -f mengfanrong/csdnblog_publish.py.lnk ];then
 	rm mengfanrong/csdnblog_publish.py.lnk
 fi
 
+if [ -f mengfanrong/bat_replace.pyc ];then
+	rm mengfanrong/bat_replace.pyc
+fi
 
 cat mengfanrong/csdnblog_publish.py|grep "version=\""|awk -F '"' '{print $2}'>version
 mkdir -p $username
