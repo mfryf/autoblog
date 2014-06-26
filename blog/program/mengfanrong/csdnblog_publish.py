@@ -142,9 +142,7 @@ def check_program_update():
         print e
 #获取脚本文件的当前路径
 def cur_file_dir():
-     #获取脚本路径
      path = sys.path[0]
-     #判断为脚本文件还是py2exe编译后的文件，如果是脚本文件，则返回的是脚本的目录，如果是py2exe编译后的文件，则返回的是编译后的文件路径
      if os.path.isdir(path):
          return path
      elif os.path.isfile(path):
@@ -153,7 +151,7 @@ def restart_program():
     path=cur_file_dir()
     print 'program is updated,now restart...'
     time.sleep(3)
-    os.system(path+'/csdnblog_publish.py')
+    os.system('python csdnblog_publish.py')
     sys.exit(1)
 def publis_blog_by_url(url,cookie):
     values=downloadOneUrl(url)
@@ -194,11 +192,17 @@ if len(sys.argv) < 1:
     print 'USAGE:python %s url'%sys.argv[0]
     sys.exit(1)
 
-host='http://autoblog.jd-app.com'
-current_cookie='';
-username='mengfanrong'
-version="1.2"
-downloadDictionary('similiar.txt')
-batReplace=BatReplace('similiar.txt')
-os.chdir(cur_file_dir())
-auto_publish_blog()
+while True:
+    try:
+        host='http://autoblog.jd-app.com'
+        current_cookie='';
+        username='mengfanrong'
+        version="1.6"
+        downloadDictionary('similiar.txt')
+        batReplace=BatReplace('similiar.txt')
+        os.chdir(cur_file_dir())
+        auto_publish_blog()
+    except Exception as e:
+        print e
+        print "初始化环境失败，可能是网络原因，10秒后重试...".decode("utf-8")
+        time.sleep(10)
