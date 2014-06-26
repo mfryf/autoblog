@@ -31,12 +31,12 @@ class BatReplace(object):
                     line=line.replace(k,v)
                     self.count+=lenk
                     replaceLength+=len(k)
-                    print k,'->',v,lenk
+                    print k.decode("utf-8"),'->',v.decode("utf-8"),lenk
                 elif lenv > 0 and self.isChineseWorld(v):
                     line=line.replace(v,k)
                     self.count+=lenv
                     replaceLength+=len(v)
-                    print v,'->',k,lenv
+                    print v.decode("utf-8"),'->',k.decode("utf-8"),lenv
             text=text+line+'\r\n'
         self.rate=replaceLength*100.0/len(text)
         print 'count of  replaced words:%d'%self.count
