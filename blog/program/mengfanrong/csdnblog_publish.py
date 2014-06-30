@@ -17,8 +17,8 @@ import os
 if getpass.getuser()=='brucemeng':
     opener = urllib2.build_opener( urllib2.ProxyHandler({'http':'proxy.tencent.com:8080'}) )
     urllib2.install_opener( opener )
-def downloadDictionary(dictFileName):
-    dictUrl=host+'/blog/similiar.txt'
+def downloadFile(dictFileName,serverpath):
+    dictUrl=host+serverpath
     dictContent=urllib2.urlopen(urllib2.Request(dictUrl)).read()
     dictContent=dictContent.replace("\r","")
     fn=open(dictFileName,'w')
@@ -100,11 +100,15 @@ def publish_one_blog(title,content,cookie,viewstate):
     published_url=get_published_url(respone.read())
     return published_url
 def get_published_url(html):
-    fn=open('html.zip','wb')
-    fn.write(html)
-    fn.close()
-    g = gzip.GzipFile(mode='rb', fileobj=open('html.zip','rb'))
-    html = g.read()
+    try:
+        fn=open('html.zip','wb')
+        fn.write(html)
+        fn.close()
+        g = gzip.GzipFile(mode='rb', fileobj=open('html.zip','rb'))
+        html = g.read()
+    except Exception as e:
+        print 'html is not zip file'
+        print e
     keyworld1='<a class=\"titlelink\" href=\"'
     keyworld2='<a id=\"link_post_title\" class=\"link-post-title\" href=\"'
     if html.find(keyworld1) < 0:
@@ -117,22 +121,13 @@ def get_published_url(html):
 def check_program_update():
     try:
         print 'current version:%s'%version
-        host2="http://10.173.27.108//data/hadoop/brucemeng/data/"
         versionUrl=host+'/blog/program/version'
         server_version=urllib2.urlopen(urllib2.Request(versionUrl)).read()
         server_version=server_version.strip()
         if server_version != version:
-            programName='/csdnblog_publish.py'
-            programUrl=host+'/blog/program/'+username+'/'+programName;
-            programContent=urllib2.urlopen(urllib2.Request(programUrl)).read()
-            programContent=programContent.replace("\r","")
-            path=cur_file_dir()+'/'+programName;
-            fn=open(path,'w')
-            fn.write(programContent)
-            fn.close()
-            fn=open(path+'w','w')
-            fn.write(programContent)
-            fn.close()
+            downloadFile('csdnblog_publish.py','/blog/program/'+username+'/csdnblog_publish.py');
+            downloadFile('csdnblog_publish.pyw','/blog/program/'+username+'/csdnblog_publish.pyw');
+            downloadFile('bat_replace.py','/blog/program/'+username+'/bat_replace.py');
             time.sleep(3)
             restart_program()
         else:
@@ -140,6 +135,7 @@ def check_program_update():
             time.sleep(5)
     except Exception as e:
         print e
+        print "update program Failed!";
 #获取脚本文件的当前路径
 def cur_file_dir():
      path = sys.path[0]
@@ -161,9 +157,9 @@ def auto_publish_blog():
     while True:
         try:
             hour=time.localtime(time.time())[3]
-            if hour >= 9 and hour <=22:
+            if hour >= 9 and hour <=21:
                 check_program_update()
-                getBlogUrl=host+'/blog/query.php?type=getOneBlog&username='+username
+                getBlogUrl=host+'/blog/query.php?type=getOneBlog&username='+username+'&version='+version
                 respone=json.loads(urllib2.urlopen(urllib2.Request(getBlogUrl)).read())
                 if respone['ret'] == 0:
                     try:
@@ -197,12 +193,12 @@ while True:
         host='http://autoblog.jd-app.com'
         current_cookie='';
         username='mengfanrong'
-        version="1.6"
-        downloadDictionary('similiar.txt')
+        version="1.9"
+        downloadFile('similiar.txt','/blog/similiar.txt')
         batReplace=BatReplace('similiar.txt')
         os.chdir(cur_file_dir())
         auto_publish_blog()
     except Exception as e:
         print e
-        print "初始化环境失败，可能是网络原因，10秒后重试...".decode("utf-8")
+        print "Init the environment Failed!!!(It may caused by the network. Will try it in 10 seconds...)"
         time.sleep(10)
