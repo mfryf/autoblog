@@ -1,8 +1,9 @@
-if [ $# != 1 ];then
-    echo USAGE:$0 username
+if [ $# != 1 ] && [ $# != 2 ];then
+    echo "USAGE:$0 username [isShow(true)]"
 	exit 1
 fi
 username=$1
+isShow=${2-true}
 if [ -d $username ];then
     rm $username -r
 fi
@@ -10,8 +11,7 @@ if [ "$username" = "mengfanrong" ];then
     echo username should not be mengfanrong
 	exit 1
 fi
-cp mengfanrong/csdnblog_publish.py mengfanrong/csdnblog_publish.pyw
-
+cat mengfanrong/csdnblog_publish.py|sed "s;'python csdnblog_publish.py';'pythonw csdnblog_publish.pyw';g"> mengfanrong/csdnblog_publish.pyw
 #rm temp files
 if [ -f mengfanrong/html.zip ];then
 	rm mengfanrong/html.zip
@@ -36,4 +36,8 @@ do
     cat $file|sed "s;mengfanrong;$username;g" >$file.tmp
 	mv $file.tmp $file
 done
+if [ "$isShow" = "false" ];then
+	cat $username/install.bat|sed "s;csdnblog_publish.py\";csdnblog_publish.pyw\";g">$username/install.bat.tmp
+	mv $username/install.bat.tmp $username/install.bat
+fi
 echo finish $username
