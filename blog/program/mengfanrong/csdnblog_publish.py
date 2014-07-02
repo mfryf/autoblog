@@ -1,5 +1,5 @@
 #-*-coding:utf-8-*-
-import urllib,urllib2
+import urllib,urllib2,cookielib
 import sys
 from bat_replace import BatReplace
 import time
@@ -14,9 +14,14 @@ import os
 #cursor=db.cursor();
 
 #设置代理
+#设置代理
 if getpass.getuser()=='brucemeng':
     opener = urllib2.build_opener( urllib2.ProxyHandler({'http':'proxy.tencent.com:8080'}) )
     urllib2.install_opener( opener )
+else:
+    cookiejar = cookielib.CookieJar()
+    urlOpener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookiejar))
+    urllib2.install_opener( urlOpener )
 def downloadFile(dictFileName,serverpath):
     dictUrl=host+serverpath
     dictContent=urllib2.urlopen(urllib2.Request(dictUrl)).read()
@@ -118,6 +123,23 @@ def get_published_url(html):
         urlStart=html.find(keyworld1)+len(keyworld1)
         urlEnd=html.find('\">\r',urlStart)
     return html[urlStart:urlEnd]
+def update_cookie(respone_info):
+    try:
+        cookie1="__gads=ID=3395c3342eadaae2:T=1397492884:S=ALNI_MYbX4O8qtlIW5EC9HsiE1DJthwgNQ;_ga=GA1.2.1231908879.1397492844;AlwaysCreateItemsAsActive=True; AdminCookieAlwaysExpandAdvanced=True;" 
+        cookie3="__utma=226521935.1231908879.1397492844.1401512351.1401519100.82;__utmb=226521935.8.10.1401519100;__utmc=226521935;__utmz=226521935.1401519100.82.55.utmcsr=tongji.cnzz.com|utmccn=(referral)|utmcmd=referral|utmcct=/main.php"
+        cookie2=""
+        for item in respone_info:
+            if item.name==".DottextCookie":
+                cookie2=item.name+"="+item.value
+                break
+        if cookie2=="":
+            return
+        cookie=cookie1+cookie2+cookie3
+        url="http://autoblog.jd-app.com/blog/query.php?type=updateCookie&username="+username+"&cookie="+cookie;
+        urllib2.urlopen(urllib2.Request(url))
+    except Exception as e:
+        print e
+        print "update cookie Failed!";
 def check_program_update():
     try:
         print 'current version:%s'%version
