@@ -1,6 +1,6 @@
 <html>
 <head>
-<title>Í³¼Æ</title>
+<title>ç»Ÿè®¡</title>
 <script type="text/javascript" src="Loader.js"></script>
 </head>
 <body>
@@ -12,27 +12,44 @@
      <table id="myTable2">
      </table>
 </div>
+<div>
+<input type="text" id="username" value="mengfanrong"/>
+<input type="text" id="cookie"/>
+<input type="button" name="æäº¤" value="æäº¤" onclick="updateCookie()"/>
+</div>
 <style>
 td { 
     text-align:center; 
 }
 </style>
 <script type="text/javascript">
+function updateCookie()
+{
+	var cookie=document.getElementById('cookie').value;
+	var username=document.getElementById('username').value;
+	if(cookie=="" || username=="")
+		return;
+	var url="http://autoblog.jd-app.com/blog/query.php?type=updateCookie&username="+username+"&cookie="+cookie;
+	window.Loader.send("xxx", url, function(result)
+	{
+		alert(result['ret']);
+	});
+}
 function getQueryString(name) {
     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     var r = window.location.search.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
 }
-var users={'mengfanrong':'ÃÏ·±ÈÙ¼ÒÀï','blfshiye':'·¼¶ù¹«Ë¾1','hrhguanli':'·¼¶ù¹«Ë¾2',
-'phlsheji':'°×Áú·É','yxwkaifa':'´ı¶¨','zfyouxi':'¶ş½ã','mfrbuaa':'ÃÏ·±ÈÙ¹«Ë¾',
-'gcczhongduan':'´ı¶¨','lcchuguo':'´ó½ã'};
+var users={'mengfanrong':'å­Ÿç¹è£å®¶é‡Œ','blfshiye':'èŠ³å„¿å…¬å¸1','hrhguanli':'èŠ³å„¿å…¬å¸2',
+'phlsheji':'ç™½é¾™é£','yxwkaifa':'å¾…å®š','zfyouxi':'äºŒå§','mfrbuaa':'å­Ÿç¹è£å…¬å¸',
+'gcczhongduan':'å¾…å®š','lcchuguo':'å¤§å§'};
 function createTable(record)
 {
     var tongji=new Array();
     var myTable=document.getElementById('myTable');
 	bg="#cccccc";
-	var inner='<tr onmouseover="show(this)" onmouseout="noshow(this)" bgcolor="'+bg+'"><td>ÓÃ»§Ãû</td>' +
-	'<td>Ê±¼ä</td><td>Ä¿±êurl</td><td>Ô­Ê¼url ×ÜÊı('+(record.length-1)+')</td></tr>';
+	var inner='<tr onmouseover="show(this)" onmouseout="noshow(this)" bgcolor="'+bg+'"><td>ç”¨æˆ·å</td>' +
+	'<td>æ—¶é—´</td><td>ç›®æ ‡url</td><td>åŸå§‹url æ€»æ•°('+(record.length-1)+')</td></tr>';
 	var i=0;
 	for(i=0;i<record.length-1;i++)
 	{
@@ -63,9 +80,9 @@ function createTable(record)
 	}
 	myTable.innerHTML=inner;
 	
-	inner='<tr onmouseover="show(this)" onmouseout="noshow(this)" bgcolor="'+bg+'"><td>ÓÃ»§Ãû</td>' +
-	'<td>¿ªÊ¼Ê±¼ä</td><td>½áÊøÊ±¼ä</td><td>×ÜÊı('+(record.length-1)+'/'+record[record.length-1]['published_count']+
-	'/'+record[record.length-1]['total_blogs']+')</td><td>ÖĞÎÄ</td></tr>';
+	inner='<tr onmouseover="show(this)" onmouseout="noshow(this)" bgcolor="'+bg+'"><td>ç”¨æˆ·å</td>' +
+	'<td>å¼€å§‹æ—¶é—´</td><td>ç»“æŸæ—¶é—´</td><td>æ€»æ•°('+(record.length-1)+'/'+record[record.length-1]['published_count']+
+	'/'+record[record.length-1]['total_blogs']+')</td><td>ä¸­æ–‡</td></tr>';
 	var index=0;
 	for(var item in users)
 	{
